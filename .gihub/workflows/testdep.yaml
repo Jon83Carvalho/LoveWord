@@ -1,4 +1,4 @@
-name: TESTE Deploy-Projeto-EDC
+name: TEsteE Deploy-Projeto-EDC
 on: 
   pull_request:
     branches: [master]

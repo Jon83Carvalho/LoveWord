@@ -12,9 +12,9 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Set up Python 3.8
-      uses: action/setup-python@v2
+      uses: actions/setup-python@v2
       with:
-        ptyhon-version: 3.8
+        python-version: 3.8
     
     - name: Hashicorp - Setup Terraform
       uses: hashicorp/setup-terraform@v1.2.1

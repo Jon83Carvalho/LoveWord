@@ -1,11 +1,11 @@
-name: Deploy-Projeto-EDC
+name: TESTE Deploy-Projeto-EDC
 on: 
   pull_request:
     branches: [master]
 
 jobs:
   deploy:
-    name: Deploy Projeto EDC - JC
+    name: TESTE Deploy Projeto EDC - JC
     runs-on: ubuntu-latest
     
     steps:

@@ -16,11 +16,11 @@ jobs:
       with:
         ptyhon-version: 3.8
     
-    - name: Hashcrp - Setup Terraform
-      uses: hascorp/setup-terraform@v1.2.1
+    - name: Hashicorp - Setup Terraform
+      uses: hashicorp/setup-terraform@v1.2.1
 
     - name: Configure AWS credentials
-      uses: aws-actions/conigure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1
       with:
         aws-access-key-id: ""
         aws-secret-access-key: ""

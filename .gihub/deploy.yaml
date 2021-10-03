@@ -1,0 +1,40 @@
+name: Deploy-Projeto-EDC
+on: 
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    name: Deploy Projeto EDC - JC
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.8
+      uses: action/setup-python@v2
+      with:
+        ptyhon-version: 3.8
+    
+    - name: Hashcrp - Setup Terraform
+      uses: hascorp/setup-terraform@v1.2.1
+
+    - name: Configure AWS credentials
+      uses: aws-actions/conigure-aws-credentials@v1
+      with:
+        aws-access-key-id: ""
+        aws-secret-access-key: ""
+        aws-region: us-east-2
+    
+    - name: IaC Apply
+      env:
+        COMMAND_IAC: terraform
+      run: |
+        cd infrastructure
+        $COMMAND_IAC init
+        $COMMAND_IAC validate
+        $COMMAND_IAC plan
+        $COMMAND_IAC apply -auto-approve
+
+
+  

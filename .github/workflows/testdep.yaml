@@ -2,8 +2,7 @@ name: TEsteE Deploy-Projeto-EDC
 on: 
   pull_request:
     paths-ignore:
-      - 'clean/**'
-      - 'clean.yaml'
+      - 'cleanning/**'
     branches: [master]
 
 

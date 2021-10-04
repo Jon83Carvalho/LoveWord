@@ -2,6 +2,8 @@ name: Deploy-Projeto-EDC
 on: 
   push:
     branches: [master]
+    paths-ignore:
+      - 'clean/**'
 
 jobs:
   deploy:

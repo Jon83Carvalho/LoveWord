@@ -1,17 +1,14 @@
-name: TEsteE Deploy-Projeto-EDC
-on: 
+name: Cleanup
+
+on:
   pull_request:
-    paths-ignore:
-      - 'cleanning/**'
-      - '.github/workflows/clean.yaml'
-      
     branches: [master]
-
-
+    paths:
+      - 'cleanning/**.txt'
 
 jobs:
   deploy:
-    name: TESTE Deploy Projeto EDC - JC
+    name: LIMPEZA DA INFRA
     runs-on: ubuntu-latest
     
     steps:
@@ -38,5 +35,4 @@ jobs:
       run: |
         cd infra
         $COMMAND_IAC init
-        $COMMAND_IAC validate
-        $COMMAND_IAC plan
+        $COMMAND_IAC destroy

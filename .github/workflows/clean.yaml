@@ -34,4 +34,5 @@ jobs:
         COMMAND_IAC: terraform
       run: |
         cd infra
+        $COMMAND_IAC init
         $COMMAND_IAC destroy

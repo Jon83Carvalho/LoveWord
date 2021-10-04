@@ -4,7 +4,7 @@ on:
     paths-ignore:
       - 'cleanning/**'
       - '.github/workflows/clean.yaml'
-      
+
     branches: [master]
 
 
@@ -38,5 +38,6 @@ jobs:
       run: |
         cd infra
         $COMMAND_IAC init
+        $COMMAND_IAC validate
         $COMMAND_IAC validate
         $COMMAND_IAC plan

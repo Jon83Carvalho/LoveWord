@@ -3,6 +3,8 @@ on:
   pull_request:
     paths-ignore:
       - 'cleanning/**'
+      - '.github/workflows/clean.yaml'
+      
     branches: [master]
 
 

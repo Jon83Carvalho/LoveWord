@@ -35,5 +35,5 @@ jobs:
       run: |
         cd infra
         $COMMAND_IAC init
-        $COMMAND_IAC destroy
-        $COMMAND_IAC apply -auto-approve
+        $COMMAND_IAC destroy -auto-approve
+  

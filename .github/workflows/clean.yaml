@@ -1,11 +1,11 @@
 name: Cleanup
 
-on:
+!on:
   pull_request:
     branches: [master]
     paths:
       - 'cleanning/**.txt'
-      - '!.github/workflows/**.yaml'
+
 
 jobs:
   deploy:

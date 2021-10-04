@@ -8,7 +8,7 @@ on:
 
 jobs:
   deploy:
-    name: TESTE Deploy Projeto EDC - JC
+    name: LIMPEZA DA INFRA
     runs-on: ubuntu-latest
     
     steps:

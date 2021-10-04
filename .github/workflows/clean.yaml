@@ -5,18 +5,33 @@ on:
     branches: [master]
     paths:
       - 'cleanning/**.txt'
-  
 
 jobs:
-  destroy_workspace:
+  deploy:
+    name: TESTE Deploy Projeto EDC - JC
     runs-on: ubuntu-latest
-    name: Destroy terraform workspace
+    
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: terraform destroy
-        uses: dflook/terraform-destroy@v1
-        with:
-          path: my-terraform-config
-          workspace: ${{ github.head_ref }}
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    
+    - name: Hashicorp - Setup Terraform
+      uses: hashicorp/setup-terraform@v1.2.1
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+    
+    - name: IaC Apply
+      env:
+        COMMAND_IAC: terraform
+      run: |
+        cd infra
+        $COMMAND_IAC destroy

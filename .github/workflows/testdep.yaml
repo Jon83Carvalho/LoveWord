@@ -4,6 +4,7 @@ on:
     branches: [master]
     paths-ignore:
       - 'clean/**'
+      - 'clean.yaml'
 
 
 jobs:

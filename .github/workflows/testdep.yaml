@@ -1,4 +1,4 @@
-name: TEsteE Deploy-Projeto-EDC
+name: Teste Deploy-Projeto-EDC
 on: 
   pull_request:
     paths-ignore:

@@ -5,6 +5,7 @@ on:
     branches: [master]
     paths:
       - 'cleanning/**.txt'
+      - '!.github/workflows/**'
 
 jobs:
   deploy:

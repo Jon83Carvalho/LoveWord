@@ -2,7 +2,7 @@ resource "aws_s3_bucket_object" "job_spark" {
   bucket = aws_s3_bucket.dl.id
   key    = "script/job_spar.py"
   acl    = "private"
-  source = "script/job_spark.py"
+  source = "scripts/job_spark.py"
   etag   = "tag-script/job_spark.py"
 }
 

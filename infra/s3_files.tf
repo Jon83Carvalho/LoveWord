@@ -3,7 +3,7 @@ resource "aws_s3_bucket_object" "job_spark" {
   key    = "script/job_spar.py"
   acl    = "private"
   source = "script/job_spark.py"
-  etag   = "tag-script/job_spark.py"'
+  etag   = "tag-script/job_spark.py"
 }
 
 # resource "aws_s3_bucket_object" "delta_insert" {

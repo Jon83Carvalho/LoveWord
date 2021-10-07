@@ -1,10 +1,10 @@
-name: TEsteE Deploy-Projeto-EDC
+name: Teste Deploy-Projeto-EDC
 on: 
   pull_request:
     paths-ignore:
       - 'cleanning/**'
       - '.github/workflows/clean.yaml'
-      
+
     branches: [master]
 
 

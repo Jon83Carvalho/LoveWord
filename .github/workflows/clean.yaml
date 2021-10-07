@@ -1,10 +1,11 @@
 name: Cleanup
 
-on:
+!on:
   pull_request:
     branches: [master]
     paths:
       - 'cleanning/**.txt'
+
 
 jobs:
   deploy:
@@ -35,4 +36,5 @@ jobs:
       run: |
         cd infra
         $COMMAND_IAC init
-        $COMMAND_IAC destroy
+        $COMMAND_IAC destroy -auto-approve
+  

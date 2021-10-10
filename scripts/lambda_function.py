@@ -92,8 +92,9 @@ def handler(event, context):
                                  '--conf', 'spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension', 
                                  '--conf', 'spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog', 
                                  '--master', 'yarn',
-                                 '--deploy-mode', 'cluster',
-                                 's3://datalake-igti-projeto-edc/script/01_delta_spark_insert.py'
+                                 '--deploy-mode',
+                                 's3://datalake-igti-projeto-edc/script/01_delta_spark_insert.py
+
                                  ]
                     }
                 },
@@ -108,7 +109,9 @@ def handler(event, context):
                                  '--conf', 'spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog', 
                                  '--master', 'yarn',
                                  '--deploy-mode', 'cluster',
+
                                  's3://datalake-igti-projeto-edc/script/02_delta_spark_upsert.py'
+
                                  ]
                     }
                 }],

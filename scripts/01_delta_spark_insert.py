@@ -14,11 +14,11 @@ from delta.tables import *
 
 # Leitura de dados
 enem = (
-    spark.read.format("txt")
+    spark.read.format("csv")
     .option("inferSchema", True)
     .option("header", True)
     .option("delimiter", ";")
-    .load("s3://dados-proj-jc-edc/raw")
+    .load("s3://dados-proj-jc-edc/raw/microdados_enade_2019.txt")
 )
 
 # Escreve a tabela em staging em formato delta

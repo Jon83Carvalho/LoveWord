@@ -14,11 +14,11 @@ from delta.tables import *
 
 # Leitura de dados
 enem = (
-    spark.read.format("csv")
+    spark.read.format("txt")
     .option("inferSchema", True)
     .option("header", True)
     .option("delimiter", ";")
-    .load("s3://datalake-ney-igti-edc/raw-data/enem")
+    .load("s3://dados-proj-jc-edc/raw")
 )
 
 # Escreve a tabela em staging em formato delta
@@ -29,5 +29,5 @@ print("Writing delta table...")
     .mode("overwrite")
     .format("delta")
     .partitionBy("year")
-    .save("s3://datalake-ney-igti-edc-tf/staging-zone/enem")
+    .save("s3://dados-proj-jc-edc/process")
 )

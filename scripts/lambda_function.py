@@ -82,7 +82,6 @@ def handler(event, context):
                 
                 StepConcurrencyLevel=1,
                 
-<<<<<<< HEAD
                 # Steps=[{
                 #     'Name': 'Delta Insert do ENEM',
                 #     'ActionOnFailure': 'CONTINUE',
@@ -113,41 +112,6 @@ def handler(event, context):
                 #                  ]
                 #     }
                 # }],
-=======
-                Steps=[{
-                    'Name': 'Delta Insert do ENEM',
-                    'ActionOnFailure': 'CONTINUE',
-                    'HadoopJarStep': {
-                        'Jar': 'command-runner.jar',
-                        'Args': ['spark-submit',
-                                 '--packages', 'io.delta:delta-core_2.12:1.0.0', 
-                                 '--conf', 'spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension', 
-                                 '--conf', 'spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog', 
-                                 '--master', 'yarn',
-                                 '--deploy-mode',
-                                 's3://datalake-igti-projeto-edc/script/01_delta_spark_insert.py
-
-                                 ]
-                    }
-                },
-                {
-                    'Name': 'Simulacao e UPSERT do ENEM',
-                    'ActionOnFailure': 'CONTINUE',
-                    'HadoopJarStep': {
-                        'Jar': 'command-runner.jar',
-                        'Args': ['spark-submit',
-                                 '--packages', 'io.delta:delta-core_2.12:1.0.0', 
-                                 '--conf', 'spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension', 
-                                 '--conf', 'spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog', 
-                                 '--master', 'yarn',
-                                 '--deploy-mode', 'cluster',
-
-                                 's3://datalake-igti-projeto-edc/script/02_delta_spark_upsert.py'
-
-                                 ]
-                    }
-                }],
->>>>>>> 237979040be47c2689b0d9ade3c55478e60f8444
             )
     
     return {

@@ -11,7 +11,7 @@ resource "aws_s3_bucket_object" "delta_insert" {
   key    = "script/01_delta_spark_insert.py"
   acl    = "private"
   source = "../scripts/01_delta_spark_insert.py"
-  etag   = filemd5("../scrpts/01_delta_spark_insert.py")
+  etag   = filemd5("../scripts/01_delta_spark_insert.py")
 }
 
 resource "aws_s3_bucket_object" "delta_upsert" {

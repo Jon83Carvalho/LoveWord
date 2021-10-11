@@ -5,7 +5,7 @@ on:
       - 'cleanning/**'
       - '.github/workflows/clean.yaml'
 
-    branches: [master]
+    branches: [dev]
 
 
 

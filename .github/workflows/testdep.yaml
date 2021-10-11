@@ -1,7 +1,7 @@
 name: Teste Deploy-Projeto-EDC
 on: 
-  push:
-    pull_request:
+  pull_request:
+    path_ignore:
       - 'cleanning/**'
       - '.github/workflows/clean.yaml'
 

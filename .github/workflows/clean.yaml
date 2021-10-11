@@ -1,6 +1,6 @@
 name: Cleanup
 
-!on:
+on:
   pull_request:
     branches: [master]
     paths:

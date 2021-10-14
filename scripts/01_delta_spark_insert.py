@@ -28,6 +28,6 @@ print("Writing delta table...")
     .write
     .mode("overwrite")
     .format("delta")
-    .partitionBy("year")
+    .partitionBy("ANO_IN_GRAD")
     .save("s3://dados-proj-jc-edc/process")
 )

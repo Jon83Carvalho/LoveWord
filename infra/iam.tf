@@ -150,7 +150,7 @@ EOF
 
   tags = {
     IES = "IGTI"
-    CURSO = "EDC"
+    CURSO = "EDC-PROJETO"
   }
 
 }

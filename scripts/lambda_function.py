@@ -1,120 +1,68 @@
+import json
+import pandas as pd
 import boto3
+import csv
+import tweepy as tw
+from datetime import datetime
+from io import StringIO # python3; python2: BytesIO 
 
-def handler(event, context):
-    """
-    Lambda function that starts a job flow in EMR.
-    """
-    client = boto3.client('emr', region_name='us-east-2')
+bucket = 'loveword' # already created on S3
+csv_buffer = StringIO()
 
-    cluster_id = client.run_job_flow(
-                Name='EMR-Jon-IGTI-delta-ProjFinal',
-                ServiceRole='EMR_DefaultRole',
-                JobFlowRole='EMR_EC2_DefaultRole',
-                VisibleToAllUsers=True,
-                LogUri='s3://datalake-igti-projeto-edc/emr-logs',
-                ReleaseLabel='emr-6.3.0',
-                Instances={
-                    'InstanceGroups': [
-                        {
-                            'Name': 'Master nodes',
-                            'Market': 'SPOT',
-                            'InstanceRole': 'MASTER',
-                            'InstanceType': 'm5.xlarge',
-                            'InstanceCount': 1,
-                        },
-                        {
-                            'Name': 'Worker nodes',
-                            'Market': 'SPOT',
-                            'InstanceRole': 'CORE',
-                            'InstanceType': 'm5.xlarge',
-                            'InstanceCount': 1,
-                        }
-                    ],
-                    'Ec2KeyName': 'igti',
-                    'KeepJobFlowAliveWhenNoSteps': True,
-                    'TerminationProtected': False,
-                    'Ec2SubnetId': 'subnet-3125ac5a'
-                },
 
-                Applications=[
-                    {'Name': 'Spark'},
-                    {'Name': 'Hive'},
-                    {'Name': 'Pig'},
-                    {'Name': 'Hue'},
-                    {'Name': 'JupyterHub'},
-                    {'Name': 'JupyterEnterpriseGateway'},
-                    {'Name': 'Livy'},
-                ],
+# your Twitter API key and API secret
+my_api_key = "ILHSAcxUbvn9LcqzZT7GufoaX"
+my_api_secret = "OkutBlmSSk2kyMlQKiCBeWhZnQ6CkVSVYdP8SK7TiFBNoFOczp"
+# authenticate
+auth = tw.OAuthHandler(my_api_key, my_api_secret)
+api = tw.API(auth, wait_on_rate_limit=True)
 
-                Configurations=[{
-                    "Classification": "spark-env",
-                    "Properties": {},
-                    "Configurations": [{
-                        "Classification": "export",
-                        "Properties": {
-                            "PYSPARK_PYTHON": "/usr/bin/python3",
-                            "PYSPARK_DRIVER_PYTHON": "/usr/bin/python3"
-                        }
-                    }]
-                },
-                    {
-                        "Classification": "spark-hive-site",
-                        "Properties": {
-                            "hive.metastore.client.factory.class": "com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory"
-                        }
-                    },
-                    {
-                        "Classification": "spark-defaults",
-                        "Properties": {
-                            "spark.submit.deployMode": "cluster",
-                            "spark.speculation": "false",
-                            "spark.sql.adaptive.enabled": "true",
-                            "spark.serializer": "org.apache.spark.serializer.KryoSerializer"
-                        }
-                    },
-                    {
-                        "Classification": "spark",
-                        "Properties": {
-                            "maximizeResourceAllocation": "true"
-                        }
-                    }
-                ],
-                
-                StepConcurrencyLevel=1,
-                
-                Steps=[{
-                    'Name': 'Delta Insert do ENEM',
-                    'ActionOnFailure': 'CONTINUE',
-                    'HadoopJarStep': {
-                        'Jar': 'command-runner.jar',
-                        'Args': ['spark-submit',
-                                 '--packages', 'io.delta:delta-core_2.12:1.0.0', 
-                                 '--conf', 'spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension', 
-                                 '--conf', 'spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog', 
-                                 '--master', 'yarn',
-                                 '--deploy-mode', 'cluster',
-                                 's3://datalake-igti-projeto-edc/script/01_delta_spark_insert.py',
-                                 ]
-                    }
-                }]#,
-                # {
-                #     'Name': 'Simulacao e UPSERT do ENEM',
-                #     'ActionOnFailure': 'CONTINUE',
-                #     'HadoopJarStep': {
-                #         'Jar': 'command-runner.jar',
-                #         'Args': ['spark-submit',
-                #                  '--packages', 'io.delta:delta-core_2.12:1.0.0', 
-                #                  '--conf', 'spark.sql.extensions=io.delta.sql.DeltaSparkSessionExtension', 
-                #                  '--conf', 'spark.sql.catalog.spark_catalog=org.apache.spark.sql.delta.catalog.DeltaCatalog', 
-                #                  '--master', 'yarn',
-                #                  '--deploy-mode', 'cluster',
-                #                  's3://datalake-igti-projeto-edc/script/02_delta_spark_upsert.py'
-                #                  ]
-                #     }
-                # }],
-            )
+
+search_query = "love"   
+
+before = datetime.now()
+tweets = tw.Cursor(api.search_tweets,
+              q=search_query).items(10)
+after = datetime.now()
+# store the API responses in a list
+
+deltaT=(after-before).microseconds
+tweets_copy = []
+for tweet in tweets:
+    tweets_copy.append(tweet)
     
+print("Total Tweets fetched:", len(tweets_copy),before,after)
+
+tweets_df = pd.DataFrame()
+# populate the dataframe
+for tweet in tweets_copy:
+    hashtags = []
+    try:
+        for hashtag in tweet.entities["hashtags"]:
+            hashtags.append(hashtag["text"])
+        text = api.get_status(id=tweet.id, tweet_mode='extended').full_text
+    except:
+        pass
+    tweets_df = tweets_df.append(pd.DataFrame({'user_name': tweet.user.name, 
+                                               'user_location': tweet.user.location,\
+                                               'user_description': tweet.user.description,
+                                               'user_verified': tweet.user.verified,
+                                               'date': tweet.created_at,
+                                               'text': text, 
+                                               'hashtags': [hashtags if hashtags else None],
+                                               'source': tweet.source}))
+    tweets_df = tweets_df.reset_index(drop=True)
+# show the dataframe
+
+tweets_df.to_csv(csv_buffer)
+s3_resource = boto3.resource('s3')
+s3_resource.Object(bucket, 'tweets_df.csv').put(Body=csv_buffer.getvalue())
+
+
+
+def lambda_handler(event, context):
+    # TODO implement
     return {
         'statusCode': 200,
-        'body': f"Started job flow {cluster_id['JobFlowId']}"
+        'body':'OK!!!!! {}'.format(deltaT)
     }

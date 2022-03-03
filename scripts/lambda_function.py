@@ -35,6 +35,10 @@ print("Total Tweets fetched:", len(tweets_copy),before,after)
 
 tweets_df = pd.DataFrame()
 # populate the dataframe
+
+
+
+
 for tweet in tweets_copy:
     hashtags = []
     try:
@@ -43,16 +47,14 @@ for tweet in tweets_copy:
         text = api.get_status(id=tweet.id, tweet_mode='extended').full_text
     except:
         pass
-    tweets_df = tweets_df.append(pd.DataFrame({'user_name': tweet.user.name, 
-                                               'user_location': tweet.user.location,\
-                                               'user_description': tweet.user.description,
-                                               'user_verified': tweet.user.verified,
-                                               'date': tweet.created_at,
+    tweets_df = tweets_df.append(pd.DataFrame({'user_location': tweet.user.location,\
                                                'text': text, 
                                                'hashtags': [hashtags if hashtags else None],
-                                               'source': tweet.source}))
+                                               'deltaT': deltaT}))
     tweets_df = tweets_df.reset_index(drop=True)
 # show the dataframe
+
+tweets_df=tweets_df.groupby(['user_location']).agg('count')
 
 tweets_df.to_csv(csv_buffer)
 s3_resource = boto3.resource('s3')

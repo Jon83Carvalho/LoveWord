@@ -7,7 +7,7 @@ from datetime import datetime
 from io import StringIO # python3; python2: BytesIO 
 
 bucket = 'loveword' # already created on S3
-csv_buffer = StringIO()ssss
+csv_buffer = StringIO()
 
 
 # your Twitter API key and API secret
@@ -17,7 +17,7 @@ my_api_secret = "OkutBlmSSk2kyMlQKiCBeWhZnQ6CkVSVYdP8SK7TiFBNoFOczp"
 auth = tw.OAuthHandler(my_api_key, my_api_secret)
 api = tw.API(auth, wait_on_rate_limit=True)
 
-
+#testesssss
 search_query = "love"   
 
 before = datetime.now()

@@ -18,47 +18,43 @@ auth = tw.OAuthHandler(my_api_key, my_api_secret)
 api = tw.API(auth, wait_on_rate_limit=True)
 
 
-search_query = "love"   
+#search_query = "love"   
+
+search_query = "love OR liebe OR amore OR amour OR amor OR 爱 OR любов OR любовь OR dashuri OR սեր OR ljubav OR amor OR 爱 OR kasih OR  사랑 -filter:retweets"
+
 
 before = datetime.now()
 tweets = tw.Cursor(api.search_tweets,
-              q=search_query).items(10)
+              q=search_query).items(5000)
 after = datetime.now()
 # store the API responses in a list
 
 deltaT=(after-before).microseconds
-tweets_copy = []
-for tweet in tweets:
-    tweets_copy.append(tweet)
-    
-print("Total Tweets fetched:", len(tweets_copy),before,after)
-
 tweets_df = pd.DataFrame()
-# populate the dataframe
 
+for tweet in tweets:
 
-
-
-for tweet in tweets_copy:
-    hashtags = []
-    try:
-        for hashtag in tweet.entities["hashtags"]:
-            hashtags.append(hashtag["text"])
-        text = api.get_status(id=tweet.id, tweet_mode='extended').full_text
-    except:
-        pass
-    tweets_df = tweets_df.append(pd.DataFrame({'user_location': tweet.user.location,\
-                                               'text': text, 
-                                               'hashtags': [hashtags if hashtags else None],
-                                               'deltaT': deltaT}))
+    
+    tweets_df = tweets_df.append(pd.DataFrame({'user_name': 
+                                                    tweet.user.name, 
+                                               'user_location': 
+                                                   tweet.user.location,
+                                               'deltaT': deltaT
+                                            },index=[tweet.user.location]))
     tweets_df = tweets_df.reset_index(drop=True)
+    
+final=datetime.now()    
+print("Total Tweets fetched:nice", len(tweets_df['deltaT']),before,after,\
+        final)
+
 # show the dataframe
 
-tweets_df=tweets_df.groupby(['user_location']).agg('count')
+tweets_df_agg=tweets_df[['user_location','deltaT']].groupby(['user_location'])\
+    .agg(['count','max'])
 
-tweets_df.to_csv(csv_buffer)
+tweets_df_agg.deltaT[['count','max']].to_csv(csv_buffer,sep="\\")
 s3_resource = boto3.resource('s3')
-s3_resource.Object(bucket, 'tweets_df.csv').put(Body=csv_buffer.getvalue())
+s3_resource.Object(bucket, 'raw/tweets_df.csv').put(Body=csv_buffer.getvalue())
 
 
 
@@ -66,5 +62,5 @@ def lambda_handler(event, context):
     # TODO implement
     return {
         'statusCode': 200,
-        'body':'OK!!!!! {}'.format(deltaT)
+        'body':'OK!!!!! {},{}'.format(len(tweets_df['deltaT']),deltaT)
     }
